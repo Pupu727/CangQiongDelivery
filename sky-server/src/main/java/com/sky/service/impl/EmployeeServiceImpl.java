@@ -1,11 +1,16 @@
 package com.sky.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
@@ -60,7 +65,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    @Override
     public void save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
@@ -74,4 +78,36 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
+    public Page<Employee> page(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
+        String name = employeePageQueryDTO.getName();
+        return employeeMapper.page(name);
+    }
+
+    public void changeStatus(Integer status, Long id) {
+        Employee e = new Employee();
+        e.setStatus(status);
+        e.setUpdateTime(LocalDateTime.now());
+        e.setUpdateUser(BaseContext.getCurrentId());
+        // 构建WHERE条件，指定只更新id匹配的记录
+        UpdateWrapper<Employee> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", id);
+        employeeMapper.update(e, updateWrapper);
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.selectById(id);
+        employee.setPassword(null);
+        return employee;
+    }
+
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.updateById(employee);
+    }
 }

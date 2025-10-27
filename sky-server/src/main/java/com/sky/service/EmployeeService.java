@@ -1,7 +1,9 @@
 package com.sky.service;
 
+import com.github.pagehelper.Page;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 
 public interface EmployeeService {
@@ -14,4 +16,12 @@ public interface EmployeeService {
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
     void save(EmployeeDTO employeeDTO);
+
+    Page<Employee> page(EmployeePageQueryDTO employeePageQueryDTO);
+
+    void changeStatus(Integer status, Long id);
+
+    Employee getById(Long id);
+
+    void update(EmployeeDTO employeeDTO);
 }
