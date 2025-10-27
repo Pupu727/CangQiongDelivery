@@ -1,11 +1,13 @@
 package com.sky.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.pagehelper.Page;
 import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
-public interface EmployeeMapper {
+public interface EmployeeMapper extends BaseMapper<Employee> {
 
     /**
      * 根据用户名查询员工
@@ -13,6 +15,7 @@ public interface EmployeeMapper {
      * @return
      */
     @Select("select * from employee where username = #{username}")
-    Employee getByUsername(String username);
+    Employee selectByUsername(String username);
 
+    Page<Employee> page(String name);
 }
