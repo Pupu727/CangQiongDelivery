@@ -27,6 +27,9 @@ mybatis-plus:
     db-config:
       id-type: auto
     banner: false
+  configuration:
+    # 打印SQL日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 logging:
   level:

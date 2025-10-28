@@ -70,11 +70,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         BeanUtils.copyProperties(employeeDTO,employee);
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         employee.setStatus(StatusConstant.ENABLE);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        // TODO 后期需要修改为当前登录员工的id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.insert(employee);
     }
 
@@ -87,8 +82,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void changeStatus(Integer status, Long id) {
         Employee e = new Employee();
         e.setStatus(status);
-        e.setUpdateTime(LocalDateTime.now());
-        e.setUpdateUser(BaseContext.getCurrentId());
         // 构建WHERE条件，指定只更新id匹配的记录
         UpdateWrapper<Employee> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", id);
@@ -106,8 +99,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.updateById(employee);
     }
 }
