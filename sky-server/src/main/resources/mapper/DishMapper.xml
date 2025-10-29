@@ -7,6 +7,33 @@
         insert into dish (name, category_id, price, image, description,create_time,create_user,update_time, update_user,status)
         values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime},#{createUser},#{updateTime}, #{updateUser}, #{status})
     </insert>
+    <update id="update">
+        update dish
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteBatch">
+        delete from dish where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
     <select id="page" resultType="com.sky.vo.DishVO">
         select d.*,c.name as categoryName from dish d left outer join category c on d.category_id = c.id
         <where>
@@ -20,5 +47,11 @@
                 and d.status = #{status}
             </if>
         </where>
+    </select>
+    <select id="getSetmealIdListByDishId" resultType="java.lang.Long">
+        select setmeal_id from setmeal_dish where dish_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </select>
 </mapper>
