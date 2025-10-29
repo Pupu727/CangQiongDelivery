@@ -41,4 +41,6 @@ public interface DishMapper {
     void deleteBatch(List<Long> ids);
 
     void update(Dish dish);
+
+    void updateStatus(Integer status, Long id);
 }
