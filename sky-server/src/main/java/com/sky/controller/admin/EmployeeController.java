@@ -93,8 +93,8 @@ public class EmployeeController {
     }
     @PostMapping("/status/{status}")
     @ApiOperation("员工状态禁用/启用")
-    public Result changeStatus(@PathVariable Integer status, Long id) {
-        employeeService.changeStatus(status, id);
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        employeeService.startOrStop(status, id);
         return Result.success();
     }
     @GetMapping("/{id}")

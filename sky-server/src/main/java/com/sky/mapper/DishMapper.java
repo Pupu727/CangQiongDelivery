@@ -40,7 +40,8 @@ public interface DishMapper {
 
     void deleteBatch(List<Long> ids);
 
+    @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
 
-    void updateStatus(Integer status, Long id);
+    List<DishVO> list(Long categoryId);
 }

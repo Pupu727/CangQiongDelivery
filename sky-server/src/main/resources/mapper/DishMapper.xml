@@ -4,8 +4,8 @@
 <mapper namespace="com.sky.mapper.DishMapper">
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into dish (name, category_id, price, image, description,create_time,create_user,update_time, update_user,status)
-        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime},#{createUser},#{updateTime}, #{updateUser}, #{status})
+        insert into dish (id,name, category_id, price, image, description,create_time,create_user,update_time, update_user,status)
+        values (#{id},#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime},#{createUser},#{updateTime}, #{updateUser}, #{status})
     </insert>
     <update id="update">
         update dish
@@ -25,11 +25,17 @@
             <if test="description != null">
                 description = #{description},
             </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
         </set>
         where id = #{id}
-    </update>
-    <update id="updateStatus">
-        update dish set status = #{status} where id = #{id}
     </update>
     <delete id="deleteBatch">
         delete from dish where id in
@@ -56,5 +62,15 @@
         <foreach collection="ids" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
+    </select>
+    <select id="list" resultType="com.sky.vo.DishVO">
+        select d.*,c.name as categoryName from dish d left outer join category c on d.category_id = c.id
+        <where>
+            d.status = 1 and c.status = 1
+            <if test="categoryId != null">
+                and d.category_id = #{categoryId}
+            </if>
+        </where>
+        order by d.update_time desc
     </select>
 </mapper>

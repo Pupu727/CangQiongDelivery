@@ -7,6 +7,7 @@ import com.sky.vo.DishVO;
 
 import java.util.List;
 
+
 public interface DishService {
     void saveWithFlavor(DishDTO dishDto);
 
@@ -19,4 +20,6 @@ public interface DishService {
     void updateWithFlavor(DishDTO dishDto);
 
     void updateStatus(Integer status, Long id);
+
+    List<DishVO> list(Long categoryId);
 }

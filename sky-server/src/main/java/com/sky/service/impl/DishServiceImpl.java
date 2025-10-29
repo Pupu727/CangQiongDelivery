@@ -83,6 +83,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @Transactional
     public void updateWithFlavor(DishDTO dishDto) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDto, dish);
@@ -103,6 +104,15 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public void updateStatus(Integer status, Long id) {
-        dishMapper.updateStatus(status, id);
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
+    }
+
+    @Override
+    public List<DishVO> list(Long categoryId) {
+        return dishMapper.list(categoryId);
     }
 }
