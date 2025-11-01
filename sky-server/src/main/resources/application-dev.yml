@@ -11,6 +11,9 @@ sky:
     access-key-secret: 6p9ObIp2UohfRYLcTMLflvwCPDckHW
     bucket-name: sky-takeout--files
     endpoint: oss-cn-beijing.aliyuncs.com
+  wechat:
+    appid: wxd79c506fb8ab19a5
+    secret: 8cd9f073cb5c2fe011c9b17443948573
 spring:
   redis:
     host: localhost
