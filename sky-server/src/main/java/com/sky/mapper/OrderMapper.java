@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.sky.entity.Orders;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -19,4 +20,7 @@ public interface OrderMapper {
     @Update("update orders set pay_status = #{orderPaidStatus}, status = #{orderStatus}, checkout_time = #{checkOutTime} " +
             "where number = #{orderNumber}")
     void updateStatus(String orderNumber, Integer orderPaidStatus, Integer orderStatus, LocalDateTime checkOutTime);
+
+    @Delete("delete from orders where number = #{orderNumber}")
+    void deleteByNumber(String orderNumber);
 }
