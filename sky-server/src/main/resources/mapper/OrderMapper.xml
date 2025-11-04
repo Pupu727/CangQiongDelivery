@@ -43,4 +43,24 @@
         </set>
         where id = #{id}
     </update>
+    <select id="conditionSearch" resultType="com.sky.entity.Orders">
+        select * from orders
+        <where>
+            <if test="beginTime != null">
+                and order_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+            <if test="number != null and number != ''">
+                and number like '%${number}%'
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like '%${phone}%'
+            </if>
+        </where>
+    </select>
 </mapper>
