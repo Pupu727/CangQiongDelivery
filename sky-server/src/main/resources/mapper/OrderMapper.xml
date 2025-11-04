@@ -43,7 +43,7 @@
         </set>
         where id = #{id}
     </update>
-    <select id="conditionSearch" resultType="com.sky.entity.Orders">
+    <select id="list" resultType="com.sky.entity.Orders">
         select * from orders
         <where>
             <if test="beginTime != null">
@@ -61,6 +61,10 @@
             <if test="phone != null and phone != ''">
                 and phone like '%${phone}%'
             </if>
+            <if test="userId != null">
+            and user_id = #{userId}
+            </if>
         </where>
+            order by order_time desc
     </select>
 </mapper>

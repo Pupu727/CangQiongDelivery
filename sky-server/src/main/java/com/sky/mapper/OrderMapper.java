@@ -26,7 +26,7 @@ public interface OrderMapper {
     @Delete("delete from orders where number = #{orderNumber}")
     void deleteByNumber(String orderNumber);
 
-    Page<Orders> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
+    Page<Orders> list(OrdersPageQueryDTO ordersPageQueryDTO);
 
     @Select("select count(id) from orders where status = #{status}")
     Integer countByStatus(Integer status);
