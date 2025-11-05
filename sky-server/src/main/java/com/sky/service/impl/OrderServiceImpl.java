@@ -21,6 +21,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Value("${sky.shop.address}")
     private String shopAddress;
@@ -207,6 +210,15 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("调用updateStatus，用于替换微信支付更新数据库状态的问题，订单号：{}", orderNumber);
         orderMapper.updateStatus(orderNumber, OrderPaidStatus, OrderStatus, check_out_time);
+
+        // 发送消息给管理端
+        Orders ordersDB = orderMapper.getByNumber(orderNumber);
+        Map map = new HashMap();
+        map.put("type", 1);
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号:"+orderNumber);
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
 
         return vo;
     }
@@ -386,6 +398,23 @@ public class OrderServiceImpl implements OrderService {
             shoppingCart.setCreateTime(LocalDateTime.now());
             shoppingCartMapper.insert(shoppingCart);
         }
+    }
+
+    @Override
+    public void reminder(Long id) {
+        // 根据id查询订单
+        Orders ordersDB = orderMapper.getById(id);
+        // 订单只有存在才可以催单
+        if (ordersDB == null ) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        // 发送催单消息到WebSocket
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号:"+ordersDB.getNumber());
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
