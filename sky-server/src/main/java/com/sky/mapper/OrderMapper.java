@@ -1,15 +1,14 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -37,4 +36,12 @@ public interface OrderMapper {
 
     @Select("select * from orders where status = #{status} and order_time < #{time}")
     List<Orders> getByStatusAndTimeLT(Integer status, LocalDateTime time);
+
+    @MapKey("date")
+    List<Map<String, Object>> getTurnoverByDateRange(Map<String, Object> params);
+
+    @MapKey("date")
+    List<Map<String, Object>> getOrderStatisticsByDateRange(Map<String, Object> params);
+
+    List<GoodsSalesDTO> getTop10Orders(LocalDateTime beginTime, LocalDateTime endTime);
 }

@@ -67,4 +67,42 @@
         </where>
             order by order_time desc
     </select>
+    <select id="getTurnoverByDateRange" resultType="java.util.Map">
+        SELECT
+            DATE(order_time) AS date,
+            SUM(amount) AS turnover
+        FROM
+            orders
+        WHERE
+            order_time BETWEEN #{begin} AND #{end}
+            AND status = #{status}
+        GROUP BY
+            DATE(order_time)
+        ORDER BY
+            DATE(order_time)
+    </select>
+    <select id="getOrderStatisticsByDateRange" resultType="java.util.Map">
+        SELECT
+            DATE(order_time) AS date,
+            COUNT(id) AS total_orders,
+            SUM(CASE WHEN status = #{completedStatus} THEN 1 ELSE 0 END) AS valid_orders
+        FROM
+            orders
+        WHERE
+            order_time BETWEEN #{begin} AND #{end}
+        GROUP BY
+            DATE(order_time)
+        ORDER BY
+            DATE(order_time)
+    </select>
+    <select id="getTop10Orders" resultType="com.sky.dto.GoodsSalesDTO">
+        select od.name, sum(od.number) as number from order_detail od
+        join orders o on od.order_id = o.id
+        where o.status = 5
+        and o.order_time >= #{beginTime}
+        and o.order_time &lt;= #{endTime}
+        group by od.name
+        order by number desc
+        limit 0,10
+    </select>
 </mapper>

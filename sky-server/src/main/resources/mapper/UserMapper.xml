@@ -7,4 +7,21 @@
         insert into user (openid, name, phone, sex, id_number, avatar, create_time)
         values (#{openid}, #{name}, #{phone}, #{sex}, #{idNumber}, #{avatar}, #{createTime})
     </insert>
+    
+    <select id="getUserStatisticsByDateRange" resultType="java.util.Map">
+        SELECT
+            date(create_time) AS date,
+            COUNT(id) AS new_users,
+            (
+                SELECT COUNT(id) 
+                FROM user 
+                WHERE create_time &lt;= DATE_ADD(date(create_time), INTERVAL 1 DAY)
+            ) AS total_users
+        FROM user
+        <where>
+            create_time BETWEEN #{begin} AND #{end}
+        </where>
+        GROUP BY date(create_time)
+        ORDER BY date(create_time)
+    </select>
 </mapper>
