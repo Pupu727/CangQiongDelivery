@@ -29,4 +29,11 @@ public interface UserMapper {
 
     @MapKey("date")
     List<Map<String, Object>> getUserStatisticsByDateRange(Map<String, Object> params);
+
+    /**
+     * 根据动态条件统计用户数量
+     * @param map 动态条件参数
+     * @return 用户数量
+     */
+    Integer countByMap(Map map);
 }

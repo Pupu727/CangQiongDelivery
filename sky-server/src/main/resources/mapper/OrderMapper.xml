@@ -105,4 +105,42 @@
         order by number desc
         limit 0,10
     </select>
+
+    <!-- 根据动态条件统计订单数量 -->
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from orders
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="begin != null">
+                and order_time >= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据动态条件统计订单金额 -->
+    <select id="sumByMap" resultType="java.lang.Double">
+        select sum(amount) from orders
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="begin != null">
+                and order_time >= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
 </mapper>

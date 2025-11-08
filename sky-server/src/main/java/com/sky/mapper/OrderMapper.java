@@ -44,4 +44,18 @@ public interface OrderMapper {
     List<Map<String, Object>> getOrderStatisticsByDateRange(Map<String, Object> params);
 
     List<GoodsSalesDTO> getTop10Orders(LocalDateTime beginTime, LocalDateTime endTime);
+
+    /**
+     * 根据动态条件统计订单数量
+     * @param map 动态条件参数
+     * @return 订单数量
+     */
+    Integer countByMap(Map map);
+
+    /**
+     * 根据动态条件统计订单金额
+     * @param map 动态条件参数
+     * @return 订单金额
+     */
+    Double sumByMap(Map map);
 }
